@@ -12,6 +12,8 @@
 bin/
 gen/
 out/
+obj/
+Debug/
 
 # Gradle files
 .gradle/
@@ -34,7 +36,11 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
+.idea/
 
 # Keystore files
 *.jks
+
+#
+*.sdf
+*.opensdf
