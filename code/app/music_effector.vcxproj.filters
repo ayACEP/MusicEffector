@@ -4,15 +4,26 @@
     <Filter Include="source">
       <UniqueIdentifier>{9449c2f2-222f-4b56-a214-c33f12944b0d}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\main\jni\music_effector.c">
-      <Filter>source</Filter>
-    </ClCompile>
+    <Filter Include="make">
+      <UniqueIdentifier>{c404ac4f-17e2-42a2-b4da-3e15bcd5294d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\jni\music_effector.h">
       <Filter>source</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main\jni\music_effector.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\main\jni\Android.mk">
+      <Filter>make</Filter>
+    </None>
+    <None Include="src\main\jni\Application.mk">
+      <Filter>make</Filter>
+    </None>
   </ItemGroup>
 </Project>

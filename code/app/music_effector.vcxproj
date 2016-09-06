@@ -19,10 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main\jni\music_effector.c" />
+    <ClCompile Include="src\main\jni\music_effector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\jni\music_effector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\main\jni\Android.mk" />
+    <None Include="src\main\jni\Application.mk" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9D231ADA-F153-4561-A8F3-0CDE9EEAEB58}</ProjectGuid>

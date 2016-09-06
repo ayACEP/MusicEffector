@@ -12,8 +12,7 @@ extern "C" {
  * Method:    haha
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_ls_musiceffector_MainActivity_haha
-  (JNIEnv *, jobject);
+JNIEXPORT void JNICALL Java_org_ls_musiceffector_MainActivity_playUriTest(JNIEnv *, jobject, jstring);
 
 #ifdef __cplusplus
 }

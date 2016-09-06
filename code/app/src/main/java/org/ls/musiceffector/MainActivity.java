@@ -27,8 +27,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                playUriTest("/sdcard/1.mp3");
             }
         });
 
@@ -100,8 +99,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     static {
+        System.loadLibrary("gnustl_shared");
         System.loadLibrary("music_effector");
     }
 
-    private native String haha();
+    private native void playUriTest(String uri);
 }
