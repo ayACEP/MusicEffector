@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="music_effector.c" />
+    <ClCompile Include="src\main\jni\music_effector.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="music_effector.h" />
+    <ClInclude Include="src\main\jni\music_effector.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9D231ADA-F153-4561-A8F3-0CDE9EEAEB58}</ProjectGuid>

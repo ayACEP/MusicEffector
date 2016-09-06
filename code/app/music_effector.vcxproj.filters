@@ -6,12 +6,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="music_effector.c">
+    <ClCompile Include="src\main\jni\music_effector.c">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="music_effector.h">
+    <ClInclude Include="src\main\jni\music_effector.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>
