@@ -1,8 +1,15 @@
 package org.ls.musiceffector;
 
+import android.media.audiofx.BassBoost;
+import android.media.audiofx.EnvironmentalReverb;
+import android.media.audiofx.Equalizer;
+import android.media.audiofx.Virtualizer;
+import android.media.effect.Effect;
+import android.media.effect.EffectFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,22 +19,50 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SeekBar;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @BindView(R.id.seek_bassboost)
+    SeekBar seekBassboost;
+
+    private MusicEffector effector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        effector = new MusicEffector();
+
+        seekBassboost.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                effector.setBassboostStrength(i);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playUriTest("/sdcard/1.mp3");
+                EnvironmentalReverb r = new EnvironmentalReverb(0, 0);
+                r.setEnabled(true);
+                r.setRoomLevel((short) -4500);
             }
         });
 
@@ -39,6 +74,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        effector.destory();
     }
 
     @Override
@@ -98,10 +139,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    static {
-        System.loadLibrary("gnustl_shared");
-        System.loadLibrary("music_effector");
-    }
-
-    private native void playUriTest(String uri);
 }

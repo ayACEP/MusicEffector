@@ -12,8 +12,9 @@
     tools:context="org.ls.musiceffector.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <SeekBar android:id="@+id/seek_bassboost"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:max="1000" />
+
 </RelativeLayout>
