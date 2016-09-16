@@ -1,142 +1,150 @@
 package org.ls.musiceffector;
 
-import android.media.audiofx.BassBoost;
-import android.media.audiofx.EnvironmentalReverb;
-import android.media.audiofx.Equalizer;
-import android.media.audiofx.Virtualizer;
-import android.media.effect.Effect;
-import android.media.effect.EffectFactory;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SeekBar;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+/**
+ * Created by LS on 2016/9/14.
+ */
+public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.seek_bassboost)
-    SeekBar seekBassboost;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.pager_main)
+    ViewPager pagerMain;
+    @BindView(R.id.tab_main)
+    TabLayout tabMain;
 
-    private MusicEffector effector;
+    private EqualizerFragment equalizerFragment;
+    private VisualizerFragment visualizerFragment;
+
+    private EffectorService effectorService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        equalizerFragment = new EqualizerFragment();
+        visualizerFragment = new VisualizerFragment();
+
+        pagerMain.setAdapter(new PagerMainAdapter(getSupportFragmentManager()));
+        tabMain.setupWithViewPager(pagerMain);
+
         setSupportActionBar(toolbar);
 
-        effector = new MusicEffector();
-
-        seekBassboost.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                effector.setBassboostStrength(i);
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EnvironmentalReverb r = new EnvironmentalReverb(0, 0);
-                r.setEnabled(true);
-                r.setRoomLevel((short) -4500);
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        Intent serviceIntent = new Intent(this, EffectorService.class);
+        startService(serviceIntent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        effector.destory();
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    protected void onResume() {
+        super.onResume();
+        Intent serviceIntent = new Intent(this, EffectorService.class);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unbindService(serviceConnection);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(final ComponentName name, final IBinder service) {
+            effectorService = ((EffectorService.EffectorBinder) service).getService();
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                    for (Fragment fragment: fragments) {
+                        ((BaseFragment) fragment).serviceConnection.onServiceConnected(name, service);
+                    }
+                }
+            });
+        }
+        @Override public void onServiceDisconnected(ComponentName name) {
+            List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            for (Fragment fragment: fragments) {
+                ((BaseFragment) fragment).serviceConnection.onServiceDisconnected(name);
+            }
+        }
+    };
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+    class PagerMainAdapter extends FragmentPagerAdapter {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        public PagerMainAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return equalizerFragment;
+                case 1:
+                    return visualizerFragment;
+            }
+            return null;
+        }
 
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getString(R.string.equalizer);
+                case 1:
+                    return getString(R.string.visualizer);
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    }
 }
