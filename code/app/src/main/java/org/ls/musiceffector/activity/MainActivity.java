@@ -1,4 +1,4 @@
-package org.ls.musiceffector;
+package org.ls.musiceffector.activity;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.ls.musiceffector.R;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,6 +27,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by LS on 2016/9/14.
+ * MainScreen
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -53,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
         tabMain.setupWithViewPager(pagerMain);
 
         setSupportActionBar(toolbar);
-
-        Intent serviceIntent = new Intent(this, EffectorService.class);
-        startService(serviceIntent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (effectorService != null) {
+            effectorService.stopCapture();
+        }
     }
 
     @Override
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(final ComponentName name, final IBinder service) {
             effectorService = ((EffectorService.EffectorBinder) service).getService();
+            effectorService.startCapture();
             new Handler().post(new Runnable() {
                 @Override
                 public void run() {

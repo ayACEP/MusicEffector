@@ -1,11 +1,10 @@
-package org.ls.musiceffector;
+package org.ls.musiceffector.activity;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.media.audiofx.Visualizer;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 /**
  * Created by LS on 2016/9/16.
@@ -20,7 +19,7 @@ public class BaseFragment extends Fragment {
         effectorService.removeOnDataCaptureListener(onDataCaptureListener);
     }
 
-    ServiceConnection serviceConnection = new ServiceConnection() {
+    public ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             effectorService = ((EffectorService.EffectorBinder) service).getService();

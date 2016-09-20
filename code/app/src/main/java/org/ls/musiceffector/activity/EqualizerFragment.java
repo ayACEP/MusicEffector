@@ -1,4 +1,4 @@
-package org.ls.musiceffector;
+package org.ls.musiceffector.activity;
 
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
@@ -11,13 +11,15 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
+import org.ls.musiceffector.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.Unbinder;
 
 /**
  * Created by LS on 2016/9/14.
+ * Equalizer fragment
  */
 public class EqualizerFragment extends BaseFragment {
 
