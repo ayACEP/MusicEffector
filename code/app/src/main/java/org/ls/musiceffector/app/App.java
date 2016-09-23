@@ -3,7 +3,7 @@ package org.ls.musiceffector.app;
 import android.app.Application;
 import android.content.Intent;
 
-import org.ls.musiceffector.activity.EffectorService;
+import org.ls.musiceffector.service.EffectorService;
 
 /**
  * Created by LS on 2016/9/18.

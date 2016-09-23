@@ -6,6 +6,8 @@ import android.media.audiofx.Visualizer;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 
+import org.ls.musiceffector.service.EffectorService;
+
 /**
  * Created by LS on 2016/9/16.
  */

@@ -46,7 +46,7 @@ public abstract class BaseVisualizerView extends View {
         @Override
         public void run() {
             invalidate();
-            post(this);
+            postDelayed(this, 0);
         }
     };
 
@@ -56,4 +56,6 @@ public abstract class BaseVisualizerView extends View {
     }
 
     protected abstract void onDrawFrame(Canvas canvas);
+
+    public abstract void pushBuffer(byte[] buffer);
 }

@@ -1,4 +1,4 @@
-package org.ls.musiceffector.activity;
+package org.ls.musiceffector.service;
 
 import android.app.Service;
 import android.content.Intent;

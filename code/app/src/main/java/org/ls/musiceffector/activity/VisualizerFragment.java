@@ -4,13 +4,10 @@ import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.ls.musiceffector.R;
-import org.ls.musiceffector.visualizer_view.BaseVisualizerSurfaceView;
 import org.ls.musiceffector.visualizer_view.WaveView;
 
 import butterknife.BindView;
@@ -51,6 +48,6 @@ public class VisualizerFragment extends BaseFragment {
 
     @Override
     protected void onWaveFormDataCaptureF(Visualizer visualizer, byte[] waveform, int samplingRate) {
-
+        surfaceVisualizer.pushBuffer(waveform);
     }
 }

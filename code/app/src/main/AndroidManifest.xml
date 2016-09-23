@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".activity.EffectorService" android:exported="false"/>
+        <service android:name=".service.EffectorService" android:exported="false"/>
 
     </application>
 
